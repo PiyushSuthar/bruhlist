@@ -1,5 +1,5 @@
-import { Field, ObjectType } from "type-graphql"
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, CreateDateColumn, UpdateDateColumn, OneToMany, In } from "typeorm"
+import { Arg, Field, Int, ObjectType } from "type-graphql"
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, CreateDateColumn, UpdateDateColumn, In } from "typeorm"
 import { Anime } from "./Anime";
 
 @ObjectType()
@@ -17,17 +17,21 @@ export class User extends BaseEntity {
     @Field(() => String)
     name: string;
 
-    @Column("text", { nullable: true })
-    @Field(() => String, { nullable: true })
-    profileUrl: string | null;
+    @Column("text")
+    @Field(() => String)
+    username: string;
 
     @Column("text", { nullable: true })
     @Field(() => String, { nullable: true })
-    bannerUrl: string | null;
+    profileUrl?: string | null;
 
     @Column("text", { nullable: true })
     @Field(() => String, { nullable: true })
-    bio: string | null;
+    bannerUrl?: string | null;
+
+    @Column("text", { nullable: true })
+    @Field(() => String, { nullable: true })
+    bio?: string | null;
 
     @Column("text", { unique: true })
     email: string;
@@ -55,8 +59,19 @@ export class User extends BaseEntity {
     _animeList: string[]
 
     @Field(() => [Anime])
-    animeList(): Promise<Anime[]> {
-        return Anime.findBy({ id: In(this._animeList) })
+    animeList(
+        @Arg("page", () => Int, {
+            defaultValue: 1,
+        }) page: number,
+        @Arg("limit", () => Int, {
+            defaultValue: 10,
+        }) perPage: number
+    ): Promise<Anime[]> {
+        return Anime.find({
+            where: { id: In(this._animeList) },
+            skip: ((page - 1) * perPage),
+            take: perPage
+        })
     }
     // TODO: Add anime and manga stats entity
 }

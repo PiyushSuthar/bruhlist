@@ -1,5 +1,5 @@
 import { Field, Int, ObjectType } from "type-graphql"
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from "typeorm"
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, CreateDateColumn, UpdateDateColumn } from "typeorm"
 
 @ObjectType()
 @Entity()
@@ -17,12 +17,12 @@ export class User extends BaseEntity {
     name: string;
 
     @Column("text")
-    @Field(() => String)
-    profile_picture: string;
+    @Field(() => String, { nullable: true })
+    profileUrl: string | null;
 
     @Column("text")
-    @Field(() => String)
-    banner_image: string;
+    @Field(() => String, { nullable: true })
+    bannerUrl: string | null;
 
     @Column("text", { unique: true })
     email: string;
@@ -32,6 +32,14 @@ export class User extends BaseEntity {
 
     @Column("int", { default: 0 })
     token_version: number;
+
+    @Field(() => Date)
+    @CreateDateColumn({ type: "timestamp with time zone" })
+    createdAt: Date;
+
+    @Field(() => Date)
+    @UpdateDateColumn({ type: "timestamp with time zone" })
+    updatedAt: Date;
 
     /**
      * Anime and Manga stats and information

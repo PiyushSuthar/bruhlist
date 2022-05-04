@@ -1,5 +1,6 @@
-import { Field, Int, ObjectType } from "type-graphql"
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, CreateDateColumn, UpdateDateColumn } from "typeorm"
+import { Field, ObjectType } from "type-graphql"
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, CreateDateColumn, UpdateDateColumn, OneToMany, In } from "typeorm"
+import { Anime } from "./Anime";
 
 @ObjectType()
 @Entity()
@@ -9,20 +10,24 @@ export class User extends BaseEntity {
      */
 
     @PrimaryGeneratedColumn("uuid")
-    @Field(() => Int)
-    id: number
+    @Field(() => String)
+    id: string;
 
     @Column("text")
     @Field(() => String)
     name: string;
 
-    @Column("text")
+    @Column("text", { nullable: true })
     @Field(() => String, { nullable: true })
     profileUrl: string | null;
 
-    @Column("text")
+    @Column("text", { nullable: true })
     @Field(() => String, { nullable: true })
     bannerUrl: string | null;
+
+    @Column("text", { nullable: true })
+    @Field(() => String, { nullable: true })
+    bio: string | null;
 
     @Column("text", { unique: true })
     email: string;
@@ -33,11 +38,11 @@ export class User extends BaseEntity {
     @Column("int", { default: 0 })
     token_version: number;
 
-    @Field(() => Date)
+    @Field(() => String)
     @CreateDateColumn({ type: "timestamp with time zone" })
     createdAt: Date;
 
-    @Field(() => Date)
+    @Field(() => String)
     @UpdateDateColumn({ type: "timestamp with time zone" })
     updatedAt: Date;
 
@@ -45,5 +50,13 @@ export class User extends BaseEntity {
      * Anime and Manga stats and information
      */
 
+    // I don't know if this is the best way to do this
+    @Column("text")
+    _animeList: string[]
+
+    @Field(() => [Anime])
+    animeList(): Promise<Anime[]> {
+        return Anime.findBy({ id: In(this._animeList) })
+    }
     // TODO: Add anime and manga stats entity
 }

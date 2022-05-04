@@ -1,57 +1,57 @@
 import { Field, ObjectType } from 'type-graphql'
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, CreateDateColumn, UpdateDateColumn } from 'typeorm'
-import { User } from './User'
+// import { User } from './User'
 
 @ObjectType()
 @Entity()
 export class Anime extends BaseEntity {
-    @Field()
+    @Field(() => String)
     @PrimaryGeneratedColumn('uuid')
     id: string
 
-    @Field()
+    @Field(() => String)
     @Column('text')
     title: string
 
-    @Field()
+    @Field(() => String, { nullable: true })
     @Column('text', { nullable: true })
-    description: string | null
+    description?: string | null
 
-    @Field()
+    @Field(() => String, { nullable: true })
     @Column('text', { nullable: true })
-    posterUrl: string | null
+    posterUrl?: string | null
 
-    @Field()
+    @Field(() => String, { nullable: true })
     @Column('text', { nullable: true })
-    bannerUrl: string | null
+    bannerUrl?: string | null
 
-    @Field()
+    @Field(() => String, { nullable: true })
     @Column('text', { nullable: true })
-    trailerUrl: string | null
+    trailerUrl?: string | null
 
-    @Field()
+    @Field(() => String, { nullable: true })
     @Column('text', { nullable: true })
-    releaseDate: string | null
+    releaseDate?: string | null
 
-    @Field()
+    @Field(() => String, { nullable: true })
     @Column('text', { nullable: true })
-    status: string | null
+    status?: string | null
 
-    @Field()
+    @Field(() => String, { nullable: true })
     @Column('text', { nullable: true })
-    duration: string | null
+    duration?: string | null
 
-    @Field()
+    @Field(() => String, { nullable: true })
     @Column('text', { nullable: true })
-    rating: string | null
+    rating?: string | null
 
-    @Field()
+    @Field(() => String, { nullable: true })
     @Column('text', { nullable: true })
-    genres: string | null
+    genres?: string | null
 
-    @Field()
+    @Field(() => String, { nullable: true })
     @Column('text', { nullable: true })
-    studios: string | null
+    studios?: string | null
 
     @Field(() => String)
     @CreateDateColumn({ type: 'timestamp with time zone' })

@@ -7,8 +7,12 @@ import {
 import { buildSchema } from 'type-graphql'
 import app from './app'
 import { Config } from "./config/env";
+import { AppDataSource } from "./data-source";
 
 const start = async () => {
+
+    await AppDataSource.initialize()
+    console.log("Connected to database")
 
     const schema = await buildSchema({
         resolvers: [__dirname + '/resolvers/**/*.ts'],

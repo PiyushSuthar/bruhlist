@@ -1,5 +1,4 @@
 import "reflect-metadata"
-import { config } from 'dotenv'
 import { ApolloServer } from 'apollo-server-express'
 import {
     ApolloServerPluginLandingPageGraphQLPlayground
@@ -7,22 +6,24 @@ import {
 
 import { buildSchema } from 'type-graphql'
 import app from './app'
+import { Config } from "./config/env";
 
 const start = async () => {
 
-    config()
     const schema = await buildSchema({
         resolvers: [__dirname + '/resolvers/**/*.ts'],
     })
+
     const apolloServer = new ApolloServer({
         schema,
-        plugins: [ApolloServerPluginLandingPageGraphQLPlayground()]
+        ...(Config.IS_DEV && { plugins: [ApolloServerPluginLandingPageGraphQLPlayground()] })
     })
+
     await apolloServer.start()
     apolloServer.applyMiddleware({ app })
 
-    app.listen(parseInt(process.env.PORT!) || 3000, () => {
-        console.log(`Server started on http://localhost:${process.env.PORT || 3000}${apolloServer.graphqlPath}`)
+    app.listen(Config.PORT, () => {
+        console.log(`Server started on http://localhost:${Config.PORT}${apolloServer.graphqlPath}`)
     })
 }
 

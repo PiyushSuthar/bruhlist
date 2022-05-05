@@ -55,8 +55,8 @@ export class User extends BaseEntity {
      */
 
     // I don't know if this is the best way to do this
-    @Column("text")
-    _animeList: string[]
+    @Column("text", { nullable: true, default: [] })
+    _animeList?: string[]
 
     @Field(() => [Anime])
     animeList(
@@ -67,8 +67,13 @@ export class User extends BaseEntity {
             defaultValue: 10,
         }) perPage: number
     ): Promise<Anime[]> {
+
+        // A lot of errors here... Need to refactor
+        if (this._animeList && this._animeList.length != 0) {
+            return Promise.resolve([])
+        }
         return Anime.find({
-            where: { id: In(this._animeList) },
+            where: { id: In(this._animeList!) },
             skip: ((page - 1) * perPage),
             take: perPage
         })
